@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>传智健康</title>
+    <meta name="description" content="传智健康">
+    <meta name="keywords" content="传智健康">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <script src="../js/axios-0.18.0.js"></script>
+</head>
+<body class="hold-transition skin-purple sidebar-mini">
+<div id="app">
+    <div class="login-container">
+        <div class="loginBox">
+            <form method="post" class="login-form" action="#" label-position="left" onsubmit="return false;">
+                <div>
+                    <a href="login.html" class="jump">账号密码登录</a>
+                </div>
+                <div class="title-container">
+                    <div class="logoInfo clearfix">
+                        <em class="logo"></em>
+                    </div>
+                </div>
+                <div>
+                        <span class="svg-container svg-container_login">
+                          <span class="user"></span>
+                        </span>
+                    <input id="telephone" type="text" v-model="user.telephone" placeholder="请输入手机号"/>
+                    <input type="button" id="sendSmsCode" :value="btnText" class="btn btn-success" :disabled="btnDisabled" @click="sendSms()" tyle="font-size: 12px"/>
+                </div>
+                <div>
+                        <span class="svg-container">
+                          <span class="username"></span>
+                        </span>
+                    <input type="text" v-model="user.smsCode" placeholder="请输入验证码"/>
+                </div>
+                <input type="submit" style="width:100%;margin-bottom:30px;" value="登录" @click="userLogin()"></input>
+                <span :style="{color: infoColor}">{{msg}}</span>
+
+                <div style="margin-top: 20px">
+                    没有账号<a href="register.html" class="jump">点我注册</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            //封装用户对象
+            user: {
+                telephone: '',
+                smsCode: ''  //验证码
+            },
+            msg: '',   //显示信息
+            infoColor: 'red',  //修改信息的颜色
+            btnDisabled: false,
+            btnText: '发送手机验证码',
+        },
+        methods: {
+            //登录按钮点击事件
+            userLogin() {
+                //应该加上用户名，密码，电话的验证
+                //使用post提交给后端处理器，参数是this.user对象
+                //要同时封装user和smsCode
+                axios.post("/user/telephoneLogin.do", this.user).then(resp => {
+                    //在回调函数中接收响应数据
+                    let resultInfo = resp.data;
+                    if (resultInfo.flag) {
+                        //表示注册成功
+                        // alert(resultInfo.message);
+                        //如果注册成功，跳转到register_ok.html页面
+                        location.href = "/backend/pages/main.html";
+                    } else {
+                        //注册失败，给msg属性赋值返回的resultInfo.message，颜色设置为红色
+                        this.msg = resultInfo.message;
+                        this.infoColor = "red";
+                    }
+                });
+            },
+            //发送手机验证码
+            sendSms() {
+                //创建正则表达式来判断手机号是否正确
+                let reg = /^1[356789]\d{9}$/;
+                //获取用户输入手机号
+                let phone = this.user.telephone.trim();  //去掉前后空格
+                //判断手机格式是否正确
+                if (!reg.test(phone)) {
+                    this.msg = "手机格式不正确";
+                    this.infoColor = "red";
+                    return;
+                }
+
+                //发送短信
+                axios.get(`/validatecode/backendSend4Login.do?telephone=${phone}`).then(resp => {
+                    let resultInfo = resp.data;
+                    //把信息显示在msg中
+                    this.msg = resultInfo.message;
+                    if (resultInfo.flag) {
+                        this.infoColor = "green";
+                    } else {
+                        this.infoColor = "red";
+                    }
+                });
+                //调用倒计时的方法
+                this.countDown(15);
+            },
+            //60秒倒计时
+            countDown(num) {
+                //按钮变成不可用
+                this.btnDisabled = true;
+                //每过1秒调用1次, setInterval方法的返回值就是计时器
+                let timer = setInterval(() => {
+                    num--;
+                    this.btnText = num + "秒后重新发送";
+                    //可以发送
+                    if (num == 0) {
+                        this.btnText = "发送手机验证码";
+                        //按钮可用
+                        this.btnDisabled = false;
+                        //清除计时器
+                        clearInterval(timer);
+                    }
+                }, 1000);
+            }
+        }
+    });
+</script>
+</html>

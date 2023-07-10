@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>传智健康</title>
+    <meta name="description" content="传智健康">
+    <meta name="keywords" content="传智健康">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <script>
+        if (window.self != window.top) {
+            window.top.location = window.location;
+        }
+    </script>
+    <script src="../js/axios-0.18.0.js"></script>
+</head>
+<body class="hold-transition skin-purple sidebar-mini">
+<div id="app">
+    <div class="login-container">
+        <div class="loginBox">
+            <form method="post" class="login-form" action="#" label-position="left" onsubmit="return false;">
+                <div class="title-container">
+                    <div class="logoInfo clearfix">
+                        <em class="logo"></em>
+                    </div>
+                </div>
+                <div>
+                        <span class="svg-container svg-container_login">
+                          <span class="user"></span>
+                        </span>
+                    <input type="text" v-model="user.username" placeholder="请输入用户名"/>
+                </div>
+                <div>
+                        <span class="svg-container">
+                          <span class="username"></span>
+                        </span>
+                    <input type="password" v-model="user.password" placeholder="请输入密码"/>
+                </div>
+                <div>
+                        <span class="svg-container">
+                          <span class="telephone"></span>
+                        </span>
+                    <input type="text" v-model="user.telephone" placeholder="请输入手机号"/>
+                </div>
+                <input type="submit" style="width:100%;margin-bottom:30px;" value="注册" @click="userSubmit()"></input>
+                <span :style="{color: infoColor}">{{msg}}</span>
+
+                <div style="margin-top: 20px">
+                    已有账号<a href="login.html" class="jump">点我登录</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+
+
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            //封装用户对象
+            user: {
+                username: '',
+                password: '',
+                telephone: ''
+            },
+            msg: '',   //显示信息
+            infoColor: 'red',
+        },
+        methods: {
+            //注册按钮点击事件
+            userSubmit() {
+                //应该加上用户名，密码，电话的验证
+                //创建正则表达式来判断手机号是否正确
+                let reg = /^1[356789]\d{9}$/;
+                //获取用户输入手机号
+                let phone = this.user.telephone.trim();  //去掉前后空格
+                //判断手机格式是否正确
+                if (!reg.test(phone)) {
+                    this.msg = "手机格式不正确";
+                    this.infoColor = "red";
+                    return;
+                }
+
+                //使用post提交给后端处理器，参数是this.user对象
+                axios.post("/user/register.do", this.user).then(resp => {
+                    //在回调函数中接收响应数据
+                    let resultInfo = resp.data;
+                    if (resultInfo.flag) {
+                        //表示注册成功
+                        // alert(resultInfo.message);
+                        //如果注册成功，跳转到register_ok.html页面
+                        location.href = "register_ok.html";
+                    } else {
+                        //注册失败，给msg属性赋值返回的resultInfo.message，颜色设置为红色
+                        this.msg = resultInfo.message;
+                        this.infoColor = "red";
+                    }
+                });
+            }
+        }
+    });
+</script>
+</html>
