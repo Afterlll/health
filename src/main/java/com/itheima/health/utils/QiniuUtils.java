@@ -24,7 +24,7 @@ public class QiniuUtils {
 
     public static void upload2Qiniu(String filePath, String fileName) {
         // 构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(Zone.zone0());
+        Configuration cfg = new Configuration(Zone.zone2());
         UploadManager uploadManager = new UploadManager(cfg);
         Auth auth = Auth.create(accessKey, secretKey);
         String upToken = auth.uploadToken(bucket);
@@ -59,6 +59,10 @@ public class QiniuUtils {
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             System.out.println(putRet.key);
             System.out.println(putRet.hash);
+//            System.out.println("=====================" + auth.privateDownloadUrl(fileName));
+//            System.out.println("auto" + auth.uploadToken(bucket));
+//            System.out.println("auto" + auth.accessKey);
+//            System.out.println("auto" + auth.authorization(fileName));
         } catch (QiniuException ex) {
             Response r = ex.response;
             System.err.println(r.toString());
@@ -73,7 +77,7 @@ public class QiniuUtils {
     // 删除文件
     public static void deleteFileFromQiniu(String fileName) {
         // 构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(Zone.zone0());
+        Configuration cfg = new Configuration(Zone.zone2());
         String key = fileName;
         Auth auth = Auth.create(accessKey, secretKey);
         BucketManager bucketManager = new BucketManager(auth, cfg);
