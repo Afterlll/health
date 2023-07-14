@@ -1,7 +1,5 @@
 package com.itheima.health.constant;
 
-import org.springframework.security.core.parameters.P;
-
 /**
  * 消息常量
  */

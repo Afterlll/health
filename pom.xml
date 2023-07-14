@@ -148,7 +148,7 @@
             <version>2.1.7</version>
         </dependency>
 
-        <!-- jasperreports 跟强大的生成pdf -->
+        <!-- jasperreports 更强大的生成pdf -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>

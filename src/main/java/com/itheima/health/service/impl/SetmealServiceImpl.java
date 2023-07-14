@@ -12,11 +12,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SetmealServiceImpl implements SetmealService {
     @Autowired
     private SetmealDAO setmealDAO;
+
+    /**
+     * 获取套餐和套餐的预约数量
+     * @return 套餐和套餐的预约数量
+     */
+    @Override
+    public List<Map> findSetmealCount() {
+        List<Map> list = setmealDAO.findSetmealCount();
+        return list;
+    }
 
     /**
      * 新增套餐
@@ -96,6 +107,29 @@ public class SetmealServiceImpl implements SetmealService {
         // 2. 删除套餐
         setmealDAO.delete(id);
         return true;
+    }
+
+    /**
+     * 查询套餐列表信息
+     * @return
+     */
+    @Override
+    public List<Setmeal> findAll() {
+        return setmealDAO.findAll();
+    }
+
+    /**
+     * 根据id查询套餐信息
+     * @param id 套餐id
+     * @return 一条套餐信息，包含所有的检查组和检查项
+     */
+    @Override
+    public Setmeal findFullSetmealById(Integer id) {
+        // 1.调用DAO获取一条套餐信息，包含所有的检查组和检查项
+        Setmeal setmeal = setmealDAO.findFullSetmealById(id);
+
+        // 2.返回一条套餐信息，包含所有的检查组和检查项
+        return setmeal;
     }
 
     /**

@@ -1,10 +1,7 @@
 package com.itheima.health.dao;
 
 import com.itheima.health.pojo.OrderSetting;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Date;
 import java.util.List;
@@ -17,6 +14,7 @@ public interface OrderSettingDAO {
      * @param orderSetting
      */
     @Insert("insert into t_ordersetting values (null, #{orderDate}, #{number}, #{reservations});")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void add(OrderSetting orderSetting);
 
     /**
@@ -42,4 +40,11 @@ public interface OrderSettingDAO {
      */
     @Select("select * from t_ordersetting where orderDate between #{begin} and #{end};")
     List<OrderSetting> getOrderSettingByMonth(Date begin, Date end);
+
+    /**
+     * 根据日期更新预约人数
+     * @param orderSetting
+     */
+    @Update("update t_ordersetting set reservations = #{reservations} where orderDate = #{orderDate};")
+    void editReservationsByOrderDate(OrderSetting orderSetting);
 }

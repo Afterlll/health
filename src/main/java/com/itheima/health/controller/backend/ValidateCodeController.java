@@ -3,7 +3,6 @@ package com.itheima.health.controller.backend;
 import com.itheima.health.constant.MessageConstant;
 import com.itheima.health.constant.RedisMessageConstant;
 import com.itheima.health.entity.Result;
-import com.itheima.health.utils.SMSUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

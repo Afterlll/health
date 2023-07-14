@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 
-public class ItcastHealthQuickStartApplication {
+public class HealthQuickStartApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ItcastHealthQuickStartApplication.class, args);
+        SpringApplication.run(HealthQuickStartApplication.class, args);
     }
 }
